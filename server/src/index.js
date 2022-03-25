@@ -16,18 +16,22 @@ const api_secret = process.env.API_SECRET;
 const serverClient = new StreamChat.getInstance(api_key, api_secret);
 
 app.post("/signup", async (req, res) => {
-	const { firstName, lastName, username, password } = req.body;
+	try {
+		const { firstName, lastName, username, password } = req.body;
 
-	//Random ID generator
-	const userId = uuidv4();
+		//Random ID generator
+		const userId = uuidv4();
 
-	// Hasing password
-	const hashedPassword = await bcrypt.hash(password, 10);
+		// Hasing password
+		const hashedPassword = await bcrypt.hash(password, 10);
 
-	// Creating Token to identify authenticated User
-	const token = serverClient.createToken(userId);
+		// Creating Token to identify authenticated User
+		const token = serverClient.createToken(userId);
 
-	res.json({ token, userId, firstName, lastName, username, hashedPassword });
+		res.json({ token, userId, firstName, lastName, username, hashedPassword });
+	} catch (error) {
+		res.json(error);
+	}
 });
 
 app.post("/login");
